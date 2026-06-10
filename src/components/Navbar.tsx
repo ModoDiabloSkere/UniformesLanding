@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Menu, X, Scissors } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
 const links = [
   { label: 'Inicio', href: '#hero' },
@@ -17,11 +17,12 @@ export function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <a href="#hero" className="flex items-center gap-2">
-            <Scissors className="h-7 w-7 text-primary-600" />
-            <span className="text-xl font-bold text-gray-900 tracking-tight">
-              Uniformes<span className="text-primary-600">Pro</span>
-            </span>
+          <a href="#hero" className="flex items-center">
+            <img
+              src="/images/logo.jpg"
+              alt="Uniformes D'Johanna"
+              className="h-10 w-auto object-contain"
+            />
           </a>
 
           <div className="hidden md:flex items-center gap-8">
