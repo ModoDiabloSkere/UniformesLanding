@@ -11,6 +11,17 @@ export function Contact() {
     setLoading(true)
 
     const form = e.currentTarget
+
+    // Honeypot anti-spam: un bot rellena todos los campos, incluido este
+    // input oculto. Si viene con valor, fingimos éxito y descartamos el envío.
+    const honeypot = (form.elements.namedItem('website') as HTMLInputElement)?.value
+    if (honeypot) {
+      setSent(true)
+      form.reset()
+      setLoading(false)
+      return
+    }
+
     const data = {
       name: (form.elements.namedItem('name') as HTMLInputElement).value,
       company: (form.elements.namedItem('company') as HTMLInputElement).value,
@@ -23,7 +34,8 @@ export function Contact() {
     }
 
     try {
-      await supabase.from('landing_contacts').insert(data)
+      const { error: insertError } = await supabase.from('landing_contacts').insert(data)
+      if (insertError) throw new Error(insertError.message)
       setSent(true)
       form.reset()
     } catch {
@@ -101,6 +113,16 @@ export function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Honeypot anti-spam: oculto para humanos, visible para bots.
+                    No debe completarse nunca por un usuario real. */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0 }}
+                />
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
